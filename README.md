@@ -28,6 +28,7 @@ python3 src/continuity_demo.py run --report reports/raon-local.json
 | Disclosure boundary | [Security and data policy](docs/SECURITY_DATA.md) |
 | Raon compatibility and source links | [Source verification](docs/SOURCES.md) |
 | Event submission preparation | [Build with Raon guide](docs/EVENT_SUBMISSION.md) |
+| Tested evidence and limits | [Verification record](docs/VERIFICATION.md) |
 
 Work is tracked in the [project EPIC and linked phase/task issues](https://github.com/Two-Weeks-Team/raon-memex-continuity/issues/2).
 
