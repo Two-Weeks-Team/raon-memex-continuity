@@ -1,0 +1,6 @@
+{
+  "id": "retry-delay",
+  "task": "Fix retry_delay in app.py. For HTTP 429 use a valid numeric Retry-After seconds header. If missing or malformed, use capped exponential backoff. Read the source and tests, correct the code, and run the tests.",
+  "query": "HTTP 429 Retry-After seconds missing malformed header exponential backoff",
+  "expected_memory_id": "synthetic-retry-002"
+}
