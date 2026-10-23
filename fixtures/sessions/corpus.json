@@ -1,0 +1,23 @@
+[
+  {
+    "id": "synthetic-cache-001",
+    "symptom": "An async cache returned the same value for different tenant and key combinations. Tests exposed cross-tenant cache key collision.",
+    "decision": "Use a tuple of tenant_id and key as the dictionary key; do not concatenate unescaped strings.",
+    "evidence": "Regression tests set the same key for two tenants and assert isolation. This is a fabricated training example, not a real user session.",
+    "outcome": "A past synthetic agent corrected cache key collision and passed its local unit tests."
+  },
+  {
+    "id": "synthetic-retry-002",
+    "symptom": "HTTP retry delay ignored Retry-After seconds, causing a rate limit loop after 429 responses.",
+    "decision": "Prefer a non-negative numeric Retry-After header; otherwise use exponential backoff with an upper cap.",
+    "evidence": "Regression tests cover 429 with numeric header, missing header, and malformed header. This is fabricated data.",
+    "outcome": "A past synthetic agent corrected retry scheduling and passed its local unit tests."
+  },
+  {
+    "id": "synthetic-unrelated-003",
+    "symptom": "A CSV parser mishandled an empty final row.",
+    "decision": "Skip only empty terminal lines, preserving quoted empty fields.",
+    "evidence": "Synthetic unrelated distractor.",
+    "outcome": "Synthetic parser test passed."
+  }
+]

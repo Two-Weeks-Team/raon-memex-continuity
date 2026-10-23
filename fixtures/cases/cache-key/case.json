@@ -1,0 +1,6 @@
+{
+  "id": "cache-key",
+  "task": "Fix the cache key collision in app.py. Values set under the same key for different tenants must remain isolated. Read the source and tests, make the smallest appropriate correction, and run the tests.",
+  "query": "tenant cache key collision same key different tenants isolation",
+  "expected_memory_id": "synthetic-cache-001"
+}
