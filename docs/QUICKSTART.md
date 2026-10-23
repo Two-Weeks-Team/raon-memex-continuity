@@ -20,7 +20,7 @@ export RAON_API_KEY='your-own-key'
 python3 src/continuity_demo.py run --report reports/raon-local.json
 ```
 
-For a cheaper first call, add `--case cache-key`. Each case runs both arms. The runner sends only public synthetic task, code, tests, and memory text; it does not scan home directories or invoke Memex. Raon's preview may take minutes and has per-organization request/token limits. The client waits up to 610 seconds per request and retries 429 twice according to `Retry-After` (at most 30 seconds each). An interrupted run does not imply a model result.
+For a cheaper first call, add `--case cache-key`. Each case runs both arms. The runner sends only public synthetic task, code, tests, and memory text; it does not scan home directories or invoke Memex. Raon's preview may take minutes and has per-organization request/token limits. The client waits up to 610 seconds per request. A 429 is recorded as an error; wait for the provider's `Retry-After` window before starting another run. An interrupted run does not imply a model result.
 
 To use another compatible model, set `MODEL_API_BASE_URL` (HTTPS), `MODEL_ID`, and `MODEL_API_KEY`. The provider must support Chat Completions function tools. This is an interface option, not proof that all providers behave identically.
 

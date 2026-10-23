@@ -106,22 +106,14 @@ class ChatClient:
             "Authorization": "Bearer " + self.api_key,
             "Content-Type": "application/json",
         })
-        for attempt in range(3):
-            try:
-                with urllib.request.urlopen(request, timeout=610) as response:
-                    return json.load(response)
-            except urllib.error.HTTPError as error:
-                if error.code != 429 or attempt == 2:
-                    raise RuntimeError(f"API returned HTTP {error.code}") from None
-                retry = error.headers.get("retry-after", "2")
-                try:
-                    delay = min(max(float(retry), 1), 30)
-                except ValueError:
-                    delay = 2
-                time.sleep(delay)
-            except urllib.error.URLError:
-                raise RuntimeError("API connection failed") from None
-        raise RuntimeError("API retry limit reached")
+        try:
+            with urllib.request.urlopen(request, timeout=610) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as error:
+            # One attempt per step keeps A/B call counts and the six-call cap exact.
+            raise RuntimeError(f"API returned HTTP {error.code}") from None
+        except (urllib.error.URLError, TimeoutError):
+            raise RuntimeError("API connection failed or timed out") from None
 
 
 def run_arm(client: ChatClient, case: dict, memory: dict | None, arm: str) -> dict:
@@ -148,8 +140,8 @@ def run_arm(client: ChatClient, case: dict, memory: dict | None, arm: str) -> di
         messages.append({"role": "user", "content": task})
         try:
             for _ in range(6):
-                response = client.complete(messages)
                 result["api_calls"] += 1
+                response = client.complete(messages)
                 usage = response.get("usage") or {}
                 result["usage_reported"] = result["usage_reported"] or bool(usage)
                 result["input_tokens"] += usage.get("prompt_tokens") or 0
@@ -171,9 +163,9 @@ def run_arm(client: ChatClient, case: dict, memory: dict | None, arm: str) -> di
                     messages.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(tool_result)})
             result["tests_passed"] = run_tests(folder)["passed"]
             result["status"] = "completed"
-        except (RuntimeError, KeyError, IndexError, ValueError) as error:
+        except (RuntimeError, TimeoutError, KeyError, IndexError, ValueError) as error:
             result["status"] = "error"
-            result["error"] = str(error)[:100]  # no request, response, prompt, or key
+            result["error"] = str(error)[:100] if isinstance(error, RuntimeError) else type(error).__name__
     result["duration_ms"] = round((time.monotonic() - start) * 1000)
     return result
 

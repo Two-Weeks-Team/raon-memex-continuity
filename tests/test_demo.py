@@ -72,6 +72,18 @@ class FixtureTests(unittest.TestCase):
         self.assertEqual(result["tool_calls"], 2)
         self.assertTrue(json.loads(client.assert_tool_result)["passed"])
 
+    def test_timeout_is_recorded_with_attempt_count(self):
+        _, cases = demo.load_fixtures()
+
+        class TimeoutClient:
+            def complete(self, messages):
+                raise TimeoutError("simulated timeout")
+
+        result = demo.run_arm(TimeoutClient(), cases[0], None, "A")
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["api_calls"], 1)
+        self.assertNotIn("simulated timeout", json.dumps(result))
+
 
 if __name__ == "__main__":
     unittest.main()
