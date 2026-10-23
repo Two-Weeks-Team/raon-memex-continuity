@@ -29,6 +29,8 @@ python3 src/continuity_demo.py run --report reports/raon-local.json
 | Raon compatibility and source links | [Source verification](docs/SOURCES.md) |
 | Event submission preparation | [Build with Raon guide](docs/EVENT_SUBMISSION.md) |
 
+Work is tracked in the [project EPIC and linked phase/task issues](https://github.com/Two-Weeks-Team/raon-memex-continuity/issues/2).
+
 ## Relationship to Memex
 
 The private `Two-Weeks-Team/memex` README, architecture, and MCP tool contract were inspected before this repository was made. Memex's public-level concept is local session memory with search, error recall, and replay through an MCP interface. This repo contains a new minimal retrieval fixture and coding-agent experiment; it neither imports Memex's code nor requires access to its private repository. The future integration boundary is a **consented, sanitized memory adapter** returning a small `id/symptom/decision/evidence/outcome` record. That adapter is **not implemented**. The demo does not claim to exercise the private Memex runtime.
